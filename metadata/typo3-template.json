@@ -1,0 +1,1227 @@
+{
+    "kind": "Template",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "typor",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "typo3",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "typo3"
+                },
+                "annotations": {
+                    "openshift.io/generated-by": "OpenShiftNewApp"
+                }
+            },
+            "spec": {
+                "triggers": [
+                    {
+                        "type": "GitHub",
+                        "github": {
+                            "secret": "WQYX0H6aohqVVrF8n-MX"
+                        }
+                    },
+                    {
+                        "type": "Generic",
+                        "generic": {
+                            "secret": "u3GFRXFChWK_VkWqaWiz"
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
+                    },
+                    {
+                        "type": "ImageChange",
+                        "imageChange": {}
+                    }
+                ],
+                "runPolicy": "Serial",
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "uri": "https://github.com/nikelmark/typo3.git"
+                    }
+                },
+                "strategy": {
+                    "type": "Docker",
+                    "dockerStrategy": {
+                        "from": {
+                            "kind": "ImageStreamTag",
+                            "name": "php:7.1-apache"
+                        }
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "typo3:latest"
+                    }
+                },
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": null
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        },
+        {
+            "kind": "Build",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "typo3-1",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "typo3",
+                    "buildconfig": "typo3",
+                    "openshift.io/build-config.name": "typo3",
+                    "openshift.io/build.start-policy": "Serial"
+                },
+                "annotations": {
+                    "openshift.io/build-config.name": "typo3",
+                    "openshift.io/build.number": "1",
+                    "openshift.io/build.pod-name": "typo3-1-build"
+                }
+            },
+            "spec": {
+                "serviceAccount": "builder",
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "uri": "https://github.com/nikelmark/typo3.git"
+                    }
+                },
+                "revision": {
+                    "type": "Git",
+                    "git": {
+                        "commit": "fe9e5cea4d7997872197200584fd4d876e4a60b5",
+                        "author": {
+                            "name": "nikelmark",
+                            "email": "nikelmark@gmail.com"
+                        },
+                        "committer": {
+                            "name": "GitHub",
+                            "email": "noreply@github.com"
+                        },
+                        "message": "Update Dockerfile"
+                    }
+                },
+                "strategy": {
+                    "type": "Docker",
+                    "dockerStrategy": {
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "php@sha256:c31e4d3dcf4196e933116077c60fd0bcb545c337cc5d4633b91e46a4342a6ad7"
+                        }
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "typo3:latest"
+                    },
+                    "pushSecret": {
+                        "name": "builder-dockercfg-5l8u9"
+                    }
+                },
+                "resources": {},
+                "postCommit": {},
+                "nodeSelector": null,
+                "triggeredBy": [
+                    {
+                        "message": "Image change",
+                        "imageChangeBuild": {
+                            "imageID": "php@sha256:c31e4d3dcf4196e933116077c60fd0bcb545c337cc5d4633b91e46a4342a6ad7",
+                            "fromRef": {
+                                "kind": "ImageStreamTag",
+                                "name": "php:7.1-apache"
+                            }
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "phase": "New",
+                "config": {
+                    "name": "typo3"
+                }
+            }
+        },
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "php",
+                "generation": 2,
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "typo3"
+                },
+                "annotations": {
+                    "openshift.io/generated-by": "OpenShiftNewApp",
+                    "openshift.io/image.dockerRepositoryCheck": "2017-06-21T13:15:37Z"
+                }
+            },
+            "spec": {
+                "tags": [
+                    {
+                        "name": "7.1-apache",
+                        "annotations": {
+                            "openshift.io/imported-from": "php:7.1-apache"
+                        },
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "172.30.38.182:5000/typo3-test/php:7.1-apache"
+                        },
+                        "generation": 2,
+                        "importPolicy": {}
+                    }
+                ]
+            },
+            "status": {
+                "dockerImageRepository": ""
+            }
+        },
+        {
+            "kind": "ImageStream",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "typo3",
+                "generation": 1,
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "typo3"
+                },
+                "annotations": {
+                    "openshift.io/generated-by": "OpenShiftNewApp"
+                }
+            },
+            "spec": {
+                "tags": [
+                    {
+                        "name": "latest",
+                        "annotations": null,
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "172.30.38.182:5000/typo3-test/typo3:latest"
+                        },
+                        "generation": null,
+                        "importPolicy": {}
+                    }
+                ]
+            },
+            "status": {
+                "dockerImageRepository": ""
+            }
+        },
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "mysql",
+                "generation": 1,
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "mysql-persistent",
+                    "template": "mysql-persistent-template"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600
+                    },
+                    "resources": {}
+                },
+                "triggers": [
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "mysql"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "openshift",
+                                "name": "mysql:5.7"
+                            }
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "replicas": 1,
+                "test": false,
+                "selector": {
+                    "name": "mysql"
+                },
+                "template": {
+                    "metadata": {
+                        "creationTimestamp": null,
+                        "labels": {
+                            "name": "mysql"
+                        }
+                    },
+                    "spec": {
+                        "volumes": [
+                            {
+                                "name": "mysql-data",
+                                "persistentVolumeClaim": {
+                                    "claimName": "mysql"
+                                }
+                            }
+                        ],
+                        "containers": [
+                            {
+                                "name": "mysql",
+                                "image": "registry.access.redhat.com/rhscl/mysql-57-rhel7@sha256:202471fb8f32aa743b5e6cb22d60d4997d632666d4b2c5173224d64be3ed73ce",
+                                "ports": [
+                                    {
+                                        "containerPort": 3306,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "env": [
+                                    {
+                                        "name": "MYSQL_USER",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "mysql",
+                                                "key": "database-user"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "MYSQL_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "mysql",
+                                                "key": "database-password"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "MYSQL_ROOT_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "mysql",
+                                                "key": "database-root-password"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "MYSQL_DATABASE",
+                                        "value": "sampledb"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "memory": "512Mi"
+                                    }
+                                },
+                                "volumeMounts": [
+                                    {
+                                        "name": "mysql-data",
+                                        "mountPath": "/var/lib/mysql/data"
+                                    }
+                                ],
+                                "livenessProbe": {
+                                    "tcpSocket": {
+                                        "port": 3306
+                                    },
+                                    "initialDelaySeconds": 30,
+                                    "timeoutSeconds": 1,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "readinessProbe": {
+                                    "exec": {
+                                        "command": [
+                                            "/bin/sh",
+                                            "-i",
+                                            "-c",
+                                            "MYSQL_PWD=\"$MYSQL_PASSWORD\" mysql -h 127.0.0.1 -u $MYSQL_USER -D $MYSQL_DATABASE -e 'SELECT 1'"
+                                        ]
+                                    },
+                                    "initialDelaySeconds": 5,
+                                    "timeoutSeconds": 1,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "imagePullPolicy": "IfNotPresent"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {}
+                    }
+                }
+            },
+            "status": {}
+        },
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "typo3",
+                "generation": 1,
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "typo3"
+                },
+                "annotations": {
+                    "openshift.io/generated-by": "OpenShiftNewApp"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Rolling",
+                    "rollingParams": {
+                        "updatePeriodSeconds": 1,
+                        "intervalSeconds": 1,
+                        "timeoutSeconds": 600,
+                        "maxUnavailable": "25%",
+                        "maxSurge": "25%"
+                    },
+                    "resources": {}
+                },
+                "triggers": [
+                    {
+                        "type": "ConfigChange"
+                    },
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "typo3"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "typo3-test",
+                                "name": "typo3:latest"
+                            }
+                        }
+                    }
+                ],
+                "replicas": 1,
+                "test": false,
+                "selector": {
+                    "app": "typo3",
+                    "deploymentconfig": "typo3"
+                },
+                "template": {
+                    "metadata": {
+                        "creationTimestamp": null,
+                        "labels": {
+                            "app": "typo3",
+                            "deploymentconfig": "typo3"
+                        },
+                        "annotations": {
+                            "openshift.io/container.typo3.image.entrypoint": "[\"docker-php-entrypoint\",\"apache2-foreground\"]",
+                            "openshift.io/generated-by": "OpenShiftNewApp"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "name": "typo3",
+                                "image": "172.30.38.182:5000/typo3-test/typo3@sha256:2f8c8d8fcb609750f9a49b3d75009193b1eddb85e9a58984fb0bb2d03acdab7a",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "resources": {},
+                                "terminationMessagePath": "/dev/termination-log",
+                                "imagePullPolicy": "Always"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "serviceAccountName": "typo3",
+                        "serviceAccount": "typo3",
+                        "securityContext": {}
+                    }
+                }
+            },
+            "status": {}
+        },
+        {
+            "kind": "ReplicationController",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "mysql-1",
+                "generation": 1,
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "mysql-persistent",
+                    "openshift.io/deployment-config.name": "mysql",
+                    "template": "mysql-persistent-template"
+                },
+                "annotations": {
+                    "openshift.io/deployer-pod.name": "mysql-1-deploy",
+                    "openshift.io/deployment-config.latest-version": "1",
+                    "openshift.io/deployment-config.name": "mysql",
+                    "openshift.io/deployment.phase": "Complete",
+                    "openshift.io/deployment.replicas": "1",
+                    "openshift.io/deployment.status-reason": "image change",
+                    "openshift.io/encoded-deployment-config": "{\"kind\":\"DeploymentConfig\",\"apiVersion\":\"v1\",\"metadata\":{\"name\":\"mysql\",\"namespace\":\"typo3-test\",\"selfLink\":\"/oapi/v1/namespaces/typo3-test/deploymentconfigs/mysql\",\"uid\":\"352060ea-5685-11e7-860f-0050568c5781\",\"resourceVersion\":\"120771361\",\"generation\":2,\"creationTimestamp\":\"2017-06-21T13:26:18Z\",\"labels\":{\"app\":\"mysql-persistent\",\"template\":\"mysql-persistent-template\"}},\"spec\":{\"strategy\":{\"type\":\"Recreate\",\"recreateParams\":{\"timeoutSeconds\":600},\"resources\":{}},\"triggers\":[{\"type\":\"ImageChange\",\"imageChangeParams\":{\"automatic\":true,\"containerNames\":[\"mysql\"],\"from\":{\"kind\":\"ImageStreamTag\",\"namespace\":\"openshift\",\"name\":\"mysql:5.7\"},\"lastTriggeredImage\":\"registry.access.redhat.com/rhscl/mysql-57-rhel7@sha256:202471fb8f32aa743b5e6cb22d60d4997d632666d4b2c5173224d64be3ed73ce\"}},{\"type\":\"ConfigChange\"}],\"replicas\":1,\"test\":false,\"selector\":{\"name\":\"mysql\"},\"template\":{\"metadata\":{\"creationTimestamp\":null,\"labels\":{\"name\":\"mysql\"}},\"spec\":{\"volumes\":[{\"name\":\"mysql-data\",\"persistentVolumeClaim\":{\"claimName\":\"mysql\"}}],\"containers\":[{\"name\":\"mysql\",\"image\":\"registry.access.redhat.com/rhscl/mysql-57-rhel7@sha256:202471fb8f32aa743b5e6cb22d60d4997d632666d4b2c5173224d64be3ed73ce\",\"ports\":[{\"containerPort\":3306,\"protocol\":\"TCP\"}],\"env\":[{\"name\":\"MYSQL_USER\",\"valueFrom\":{\"secretKeyRef\":{\"name\":\"mysql\",\"key\":\"database-user\"}}},{\"name\":\"MYSQL_PASSWORD\",\"valueFrom\":{\"secretKeyRef\":{\"name\":\"mysql\",\"key\":\"database-password\"}}},{\"name\":\"MYSQL_ROOT_PASSWORD\",\"valueFrom\":{\"secretKeyRef\":{\"name\":\"mysql\",\"key\":\"database-root-password\"}}},{\"name\":\"MYSQL_DATABASE\",\"value\":\"sampledb\"}],\"resources\":{\"limits\":{\"memory\":\"512Mi\"}},\"volumeMounts\":[{\"name\":\"mysql-data\",\"mountPath\":\"/var/lib/mysql/data\"}],\"livenessProbe\":{\"tcpSocket\":{\"port\":3306},\"initialDelaySeconds\":30,\"timeoutSeconds\":1,\"periodSeconds\":10,\"successThreshold\":1,\"failureThreshold\":3},\"readinessProbe\":{\"exec\":{\"command\":[\"/bin/sh\",\"-i\",\"-c\",\"MYSQL_PWD=\\\"$MYSQL_PASSWORD\\\" mysql -h 127.0.0.1 -u $MYSQL_USER -D $MYSQL_DATABASE -e 'SELECT 1'\"]},\"initialDelaySeconds\":5,\"timeoutSeconds\":1,\"periodSeconds\":10,\"successThreshold\":1,\"failureThreshold\":3},\"terminationMessagePath\":\"/dev/termination-log\",\"imagePullPolicy\":\"IfNotPresent\"}],\"restartPolicy\":\"Always\",\"terminationGracePeriodSeconds\":30,\"dnsPolicy\":\"ClusterFirst\",\"securityContext\":{}}}},\"status\":{\"latestVersion\":1,\"observedGeneration\":1,\"details\":{\"message\":\"image change\",\"causes\":[{\"type\":\"ImageChange\",\"imageTrigger\":{\"from\":{\"kind\":\"ImageStreamTag\",\"namespace\":\"openshift\",\"name\":\"mysql:5.7\"}}}]},\"conditions\":[{\"type\":\"Available\",\"status\":\"False\",\"lastTransitionTime\":\"2017-06-21T13:26:18Z\",\"message\":\"Deployment config does not have minimum availability.\"}]}}\n"
+                }
+            },
+            "spec": {
+                "replicas": 1,
+                "selector": {
+                    "deployment": "mysql-1",
+                    "deploymentconfig": "mysql",
+                    "name": "mysql"
+                },
+                "template": {
+                    "metadata": {
+                        "creationTimestamp": null,
+                        "labels": {
+                            "deployment": "mysql-1",
+                            "deploymentconfig": "mysql",
+                            "name": "mysql"
+                        },
+                        "annotations": {
+                            "openshift.io/deployment-config.latest-version": "1",
+                            "openshift.io/deployment-config.name": "mysql",
+                            "openshift.io/deployment.name": "mysql-1"
+                        }
+                    },
+                    "spec": {
+                        "volumes": [
+                            {
+                                "name": "mysql-data",
+                                "persistentVolumeClaim": {
+                                    "claimName": "mysql"
+                                }
+                            }
+                        ],
+                        "containers": [
+                            {
+                                "name": "mysql",
+                                "image": "registry.access.redhat.com/rhscl/mysql-57-rhel7@sha256:202471fb8f32aa743b5e6cb22d60d4997d632666d4b2c5173224d64be3ed73ce",
+                                "ports": [
+                                    {
+                                        "containerPort": 3306,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "env": [
+                                    {
+                                        "name": "MYSQL_USER",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "mysql",
+                                                "key": "database-user"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "MYSQL_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "mysql",
+                                                "key": "database-password"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "MYSQL_ROOT_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "mysql",
+                                                "key": "database-root-password"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "MYSQL_DATABASE",
+                                        "value": "sampledb"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "memory": "512Mi"
+                                    }
+                                },
+                                "volumeMounts": [
+                                    {
+                                        "name": "mysql-data",
+                                        "mountPath": "/var/lib/mysql/data"
+                                    }
+                                ],
+                                "livenessProbe": {
+                                    "tcpSocket": {
+                                        "port": 3306
+                                    },
+                                    "initialDelaySeconds": 30,
+                                    "timeoutSeconds": 1,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "readinessProbe": {
+                                    "exec": {
+                                        "command": [
+                                            "/bin/sh",
+                                            "-i",
+                                            "-c",
+                                            "MYSQL_PWD=\"$MYSQL_PASSWORD\" mysql -h 127.0.0.1 -u $MYSQL_USER -D $MYSQL_DATABASE -e 'SELECT 1'"
+                                        ]
+                                    },
+                                    "initialDelaySeconds": 5,
+                                    "timeoutSeconds": 1,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "imagePullPolicy": "IfNotPresent"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {}
+                    }
+                }
+            },
+            "status": {
+                "replicas": 0
+            }
+        },
+        {
+            "kind": "ReplicationController",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "typo3-1",
+                "generation": 1,
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "typo3",
+                    "openshift.io/deployment-config.name": "typo3"
+                },
+                "annotations": {
+                    "kubectl.kubernetes.io/original-replicas": "1",
+                    "openshift.io/deployer-pod.name": "typo3-1-deploy",
+                    "openshift.io/deployment-config.latest-version": "1",
+                    "openshift.io/deployment-config.name": "typo3",
+                    "openshift.io/deployment.phase": "Complete",
+                    "openshift.io/deployment.replicas": "1",
+                    "openshift.io/deployment.status-reason": "image change",
+                    "openshift.io/encoded-deployment-config": "{\"kind\":\"DeploymentConfig\",\"apiVersion\":\"v1\",\"metadata\":{\"name\":\"typo3\",\"namespace\":\"typo3-test\",\"selfLink\":\"/oapi/v1/namespaces/typo3-test/deploymentconfigs/typo3\",\"uid\":\"b69624a0-5683-11e7-860f-0050568c5781\",\"resourceVersion\":\"120770778\",\"generation\":2,\"creationTimestamp\":\"2017-06-21T13:15:36Z\",\"labels\":{\"app\":\"typo3\"},\"annotations\":{\"openshift.io/generated-by\":\"OpenShiftNewApp\"}},\"spec\":{\"strategy\":{\"type\":\"Rolling\",\"rollingParams\":{\"updatePeriodSeconds\":1,\"intervalSeconds\":1,\"timeoutSeconds\":600,\"maxUnavailable\":\"25%\",\"maxSurge\":\"25%\"},\"resources\":{}},\"triggers\":[{\"type\":\"ConfigChange\"},{\"type\":\"ImageChange\",\"imageChangeParams\":{\"automatic\":true,\"containerNames\":[\"typo3\"],\"from\":{\"kind\":\"ImageStreamTag\",\"namespace\":\"typo3-test\",\"name\":\"typo3:latest\"},\"lastTriggeredImage\":\"172.30.38.182:5000/typo3-test/typo3@sha256:2f8c8d8fcb609750f9a49b3d75009193b1eddb85e9a58984fb0bb2d03acdab7a\"}}],\"replicas\":1,\"test\":false,\"selector\":{\"app\":\"typo3\",\"deploymentconfig\":\"typo3\"},\"template\":{\"metadata\":{\"creationTimestamp\":null,\"labels\":{\"app\":\"typo3\",\"deploymentconfig\":\"typo3\"},\"annotations\":{\"openshift.io/container.typo3.image.entrypoint\":\"[\\\"docker-php-entrypoint\\\",\\\"apache2-foreground\\\"]\",\"openshift.io/generated-by\":\"OpenShiftNewApp\"}},\"spec\":{\"containers\":[{\"name\":\"typo3\",\"image\":\"172.30.38.182:5000/typo3-test/typo3@sha256:2f8c8d8fcb609750f9a49b3d75009193b1eddb85e9a58984fb0bb2d03acdab7a\",\"ports\":[{\"containerPort\":8080,\"protocol\":\"TCP\"}],\"resources\":{},\"terminationMessagePath\":\"/dev/termination-log\",\"imagePullPolicy\":\"Always\"}],\"restartPolicy\":\"Always\",\"terminationGracePeriodSeconds\":30,\"dnsPolicy\":\"ClusterFirst\",\"securityContext\":{}}}},\"status\":{\"latestVersion\":1,\"observedGeneration\":1,\"details\":{\"message\":\"image change\",\"causes\":[{\"type\":\"ImageChange\",\"imageTrigger\":{\"from\":{\"kind\":\"ImageStreamTag\",\"namespace\":\"typo3-test\",\"name\":\"typo3:latest\"}}}]},\"conditions\":[{\"type\":\"Available\",\"status\":\"False\",\"lastTransitionTime\":\"2017-06-21T13:15:36Z\",\"message\":\"Deployment config does not have minimum availability.\"}]}}\n"
+                }
+            },
+            "spec": {
+                "replicas": 0,
+                "selector": {
+                    "app": "typo3",
+                    "deployment": "typo3-1",
+                    "deploymentconfig": "typo3"
+                },
+                "template": {
+                    "metadata": {
+                        "creationTimestamp": null,
+                        "labels": {
+                            "app": "typo3",
+                            "deployment": "typo3-1",
+                            "deploymentconfig": "typo3"
+                        },
+                        "annotations": {
+                            "openshift.io/container.typo3.image.entrypoint": "[\"docker-php-entrypoint\",\"apache2-foreground\"]",
+                            "openshift.io/deployment-config.latest-version": "1",
+                            "openshift.io/deployment-config.name": "typo3",
+                            "openshift.io/deployment.name": "typo3-1",
+                            "openshift.io/generated-by": "OpenShiftNewApp"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "name": "typo3",
+                                "image": "172.30.38.182:5000/typo3-test/typo3@sha256:2f8c8d8fcb609750f9a49b3d75009193b1eddb85e9a58984fb0bb2d03acdab7a",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "resources": {},
+                                "terminationMessagePath": "/dev/termination-log",
+                                "imagePullPolicy": "Always"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {}
+                    }
+                }
+            },
+            "status": {
+                "replicas": 0
+            }
+        },
+        {
+            "kind": "ReplicationController",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "typo3-2",
+                "generation": 1,
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "typo3",
+                    "openshift.io/deployment-config.name": "typo3"
+                },
+                "annotations": {
+                    "openshift.io/deployer-pod.name": "typo3-2-deploy",
+                    "openshift.io/deployment-config.latest-version": "2",
+                    "openshift.io/deployment-config.name": "typo3",
+                    "openshift.io/deployment.phase": "Complete",
+                    "openshift.io/deployment.replicas": "",
+                    "openshift.io/deployment.status-reason": "config change",
+                    "openshift.io/encoded-deployment-config": "{\"kind\":\"DeploymentConfig\",\"apiVersion\":\"v1\",\"metadata\":{\"name\":\"typo3\",\"namespace\":\"typo3-test\",\"selfLink\":\"/oapi/v1/namespaces/typo3-test/deploymentconfigs/typo3\",\"uid\":\"b69624a0-5683-11e7-860f-0050568c5781\",\"resourceVersion\":\"120771050\",\"generation\":4,\"creationTimestamp\":\"2017-06-21T13:15:36Z\",\"labels\":{\"app\":\"typo3\"},\"annotations\":{\"openshift.io/generated-by\":\"OpenShiftNewApp\"}},\"spec\":{\"strategy\":{\"type\":\"Rolling\",\"rollingParams\":{\"updatePeriodSeconds\":1,\"intervalSeconds\":1,\"timeoutSeconds\":600,\"maxUnavailable\":\"25%\",\"maxSurge\":\"25%\"},\"resources\":{}},\"triggers\":[{\"type\":\"ConfigChange\"},{\"type\":\"ImageChange\",\"imageChangeParams\":{\"automatic\":true,\"containerNames\":[\"typo3\"],\"from\":{\"kind\":\"ImageStreamTag\",\"namespace\":\"typo3-test\",\"name\":\"typo3:latest\"},\"lastTriggeredImage\":\"172.30.38.182:5000/typo3-test/typo3@sha256:2f8c8d8fcb609750f9a49b3d75009193b1eddb85e9a58984fb0bb2d03acdab7a\"}}],\"replicas\":1,\"test\":false,\"selector\":{\"app\":\"typo3\",\"deploymentconfig\":\"typo3\"},\"template\":{\"metadata\":{\"creationTimestamp\":null,\"labels\":{\"app\":\"typo3\",\"deploymentconfig\":\"typo3\"},\"annotations\":{\"openshift.io/container.typo3.image.entrypoint\":\"[\\\"docker-php-entrypoint\\\",\\\"apache2-foreground\\\"]\",\"openshift.io/generated-by\":\"OpenShiftNewApp\"}},\"spec\":{\"containers\":[{\"name\":\"typo3\",\"image\":\"172.30.38.182:5000/typo3-test/typo3@sha256:2f8c8d8fcb609750f9a49b3d75009193b1eddb85e9a58984fb0bb2d03acdab7a\",\"ports\":[{\"containerPort\":8080,\"protocol\":\"TCP\"}],\"resources\":{},\"terminationMessagePath\":\"/dev/termination-log\",\"imagePullPolicy\":\"Always\"}],\"restartPolicy\":\"Always\",\"terminationGracePeriodSeconds\":30,\"dnsPolicy\":\"ClusterFirst\",\"serviceAccountName\":\"typo3\",\"serviceAccount\":\"typo3\",\"securityContext\":{}}}},\"status\":{\"latestVersion\":2,\"observedGeneration\":3,\"replicas\":1,\"updatedReplicas\":1,\"availableReplicas\":1,\"details\":{\"message\":\"config change\",\"causes\":[{\"type\":\"ConfigChange\"}]},\"conditions\":[{\"type\":\"Available\",\"status\":\"True\",\"lastTransitionTime\":\"2017-06-21T13:20:55Z\",\"message\":\"Deployment config has minimum availability.\"},{\"type\":\"Progressing\",\"status\":\"True\",\"lastTransitionTime\":\"2017-06-21T13:20:36Z\",\"reason\":\"NewReplicationControllerAvailable\",\"message\":\"Replication controller \\\"typo3-1\\\" has completed progressing\"}]}}\n"
+                }
+            },
+            "spec": {
+                "replicas": 1,
+                "selector": {
+                    "app": "typo3",
+                    "deployment": "typo3-2",
+                    "deploymentconfig": "typo3"
+                },
+                "template": {
+                    "metadata": {
+                        "creationTimestamp": null,
+                        "labels": {
+                            "app": "typo3",
+                            "deployment": "typo3-2",
+                            "deploymentconfig": "typo3"
+                        },
+                        "annotations": {
+                            "openshift.io/container.typo3.image.entrypoint": "[\"docker-php-entrypoint\",\"apache2-foreground\"]",
+                            "openshift.io/deployment-config.latest-version": "2",
+                            "openshift.io/deployment-config.name": "typo3",
+                            "openshift.io/deployment.name": "typo3-2",
+                            "openshift.io/generated-by": "OpenShiftNewApp"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "name": "typo3",
+                                "image": "172.30.38.182:5000/typo3-test/typo3@sha256:2f8c8d8fcb609750f9a49b3d75009193b1eddb85e9a58984fb0bb2d03acdab7a",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "resources": {},
+                                "terminationMessagePath": "/dev/termination-log",
+                                "imagePullPolicy": "Always"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "serviceAccountName": "typo3",
+                        "serviceAccount": "typo3",
+                        "securityContext": {}
+                    }
+                }
+            },
+            "status": {
+                "replicas": 0
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "typo3",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "typo3"
+                },
+                "annotations": {
+                    "openshift.io/host.generated": "true"
+                }
+            },
+            "spec": {
+                "host": "typo3-typo3-test.playground.itandtel.at",
+                "to": {
+                    "kind": "Service",
+                    "name": "typo3",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": "8080-tcp"
+                },
+                "wildcardPolicy": "None"
+            },
+            "status": {
+                "ingress": [
+                    {
+                        "host": "typo3-typo3-test.playground.itandtel.at",
+                        "routerName": "poc-router",
+                        "conditions": [
+                            {
+                                "type": "Admitted",
+                                "status": "True",
+                                "lastTransitionTime": "2017-06-21T13:21:12Z"
+                            }
+                        ],
+                        "wildcardPolicy": "None"
+                    }
+                ]
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "mysql",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "mysql-persistent",
+                    "template": "mysql-persistent-template"
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "mysql",
+                        "protocol": "TCP",
+                        "port": 3306,
+                        "targetPort": 3306
+                    }
+                ],
+                "selector": {
+                    "name": "mysql"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "typo3",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "typo3"
+                },
+                "annotations": {
+                    "openshift.io/generated-by": "OpenShiftNewApp"
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "8080-tcp",
+                        "protocol": "TCP",
+                        "port": 8080,
+                        "targetPort": 8080
+                    }
+                ],
+                "selector": {
+                    "app": "typo3",
+                    "deploymentconfig": "typo3"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Pod",
+            "apiVersion": "v1",
+            "metadata": {
+                "generateName": "mysql-1-",
+                "creationTimestamp": null,
+                "labels": {
+                    "deployment": "mysql-1",
+                    "deploymentconfig": "mysql",
+                    "name": "mysql"
+                },
+                "annotations": {
+                    "kubernetes.io/created-by": "{\"kind\":\"SerializedReference\",\"apiVersion\":\"v1\",\"reference\":{\"kind\":\"ReplicationController\",\"namespace\":\"typo3-test\",\"name\":\"mysql-1\",\"uid\":\"352425cb-5685-11e7-860f-0050568c5781\",\"apiVersion\":\"v1\",\"resourceVersion\":\"120771385\"}}\n",
+                    "openshift.io/deployment-config.latest-version": "1",
+                    "openshift.io/deployment-config.name": "mysql",
+                    "openshift.io/deployment.name": "mysql-1",
+                    "openshift.io/scc": "restricted"
+                }
+            },
+            "spec": {
+                "volumes": [
+                    {
+                        "name": "mysql-data",
+                        "persistentVolumeClaim": {
+                            "claimName": "mysql"
+                        }
+                    },
+                    {
+                        "name": "default-token-gr1ek",
+                        "secret": {
+                            "secretName": "default-token-gr1ek",
+                            "defaultMode": 420
+                        }
+                    }
+                ],
+                "containers": [
+                    {
+                        "name": "mysql",
+                        "image": "registry.access.redhat.com/rhscl/mysql-57-rhel7@sha256:202471fb8f32aa743b5e6cb22d60d4997d632666d4b2c5173224d64be3ed73ce",
+                        "ports": [
+                            {
+                                "containerPort": 3306,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "env": [
+                            {
+                                "name": "MYSQL_USER",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "name": "mysql",
+                                        "key": "database-user"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "MYSQL_PASSWORD",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "name": "mysql",
+                                        "key": "database-password"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "MYSQL_ROOT_PASSWORD",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "name": "mysql",
+                                        "key": "database-root-password"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "MYSQL_DATABASE",
+                                "value": "sampledb"
+                            }
+                        ],
+                        "resources": {
+                            "limits": {
+                                "memory": "512Mi"
+                            },
+                            "requests": {
+                                "memory": "512Mi"
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "name": "mysql-data",
+                                "mountPath": "/var/lib/mysql/data"
+                            },
+                            {
+                                "name": "default-token-gr1ek",
+                                "readOnly": true,
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount"
+                            }
+                        ],
+                        "livenessProbe": {
+                            "tcpSocket": {
+                                "port": 3306
+                            },
+                            "initialDelaySeconds": 30,
+                            "timeoutSeconds": 1,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "failureThreshold": 3
+                        },
+                        "readinessProbe": {
+                            "exec": {
+                                "command": [
+                                    "/bin/sh",
+                                    "-i",
+                                    "-c",
+                                    "MYSQL_PWD=\"$MYSQL_PASSWORD\" mysql -h 127.0.0.1 -u $MYSQL_USER -D $MYSQL_DATABASE -e 'SELECT 1'"
+                                ]
+                            },
+                            "initialDelaySeconds": 5,
+                            "timeoutSeconds": 1,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "failureThreshold": 3
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "imagePullPolicy": "IfNotPresent",
+                        "securityContext": {
+                            "capabilities": {
+                                "drop": [
+                                    "KILL",
+                                    "MKNOD",
+                                    "SETGID",
+                                    "SETUID",
+                                    "SYS_CHROOT"
+                                ]
+                            },
+                            "privileged": false,
+                            "seLinuxOptions": {
+                                "level": "s0:c26,c0"
+                            }
+                        }
+                    }
+                ],
+                "restartPolicy": "Always",
+                "terminationGracePeriodSeconds": 30,
+                "dnsPolicy": "ClusterFirst",
+                "nodeSelector": {
+                    "region": "primary"
+                },
+                "serviceAccountName": "default",
+                "serviceAccount": "default",
+                "nodeName": "itsrv1529.esrv.local",
+                "securityContext": {
+                    "seLinuxOptions": {
+                        "level": "s0:c26,c0"
+                    },
+                    "fsGroup": 1000650000
+                },
+                "imagePullSecrets": [
+                    {
+                        "name": "default-dockercfg-2n747"
+                    }
+                ]
+            },
+            "status": {
+                "phase": "Pending"
+            }
+        },
+        {
+            "kind": "Pod",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "typo3-1-build",
+                "creationTimestamp": null,
+                "labels": {
+                    "openshift.io/build.name": "typo3-1"
+                },
+                "annotations": {
+                    "openshift.io/build.name": "typo3-1",
+                    "openshift.io/scc": "privileged"
+                }
+            },
+            "spec": {
+                "volumes": [
+                    {
+                        "name": "docker-socket",
+                        "hostPath": {
+                            "path": "/var/run/docker.sock"
+                        }
+                    },
+                    {
+                        "name": "builder-dockercfg-5l8u9-push",
+                        "secret": {
+                            "secretName": "builder-dockercfg-5l8u9",
+                            "defaultMode": 420
+                        }
+                    },
+                    {
+                        "name": "builder-token-e1iio",
+                        "secret": {
+                            "secretName": "builder-token-e1iio",
+                            "defaultMode": 420
+                        }
+                    }
+                ],
+                "containers": [
+                    {
+                        "name": "docker-build",
+                        "image": "openshift3/ose-docker-builder:v3.4.1.7",
+                        "args": [
+                            "--loglevel=0"
+                        ],
+                        "env": [
+                            {
+                                "name": "BUILD",
+                                "value": "{\"kind\":\"Build\",\"apiVersion\":\"v1\",\"metadata\":{\"name\":\"typo3-1\",\"namespace\":\"typo3-test\",\"selfLink\":\"/oapi/v1/namespaces/typo3-test/builds/typo3-1\",\"uid\":\"b735dca5-5683-11e7-860f-0050568c5781\",\"resourceVersion\":\"120770396\",\"creationTimestamp\":\"2017-06-21T13:15:37Z\",\"labels\":{\"app\":\"typo3\",\"buildconfig\":\"typo3\",\"openshift.io/build-config.name\":\"typo3\",\"openshift.io/build.start-policy\":\"Serial\"},\"annotations\":{\"openshift.io/build-config.name\":\"typo3\",\"openshift.io/build.number\":\"1\"}},\"spec\":{\"serviceAccount\":\"builder\",\"source\":{\"type\":\"Git\",\"git\":{\"uri\":\"https://github.com/nikelmark/typo3.git\"}},\"strategy\":{\"type\":\"Docker\",\"dockerStrategy\":{\"from\":{\"kind\":\"DockerImage\",\"name\":\"php@sha256:c31e4d3dcf4196e933116077c60fd0bcb545c337cc5d4633b91e46a4342a6ad7\"}}},\"output\":{\"to\":{\"kind\":\"DockerImage\",\"name\":\"172.30.38.182:5000/typo3-test/typo3:latest\"},\"pushSecret\":{\"name\":\"builder-dockercfg-5l8u9\"}},\"resources\":{},\"postCommit\":{},\"nodeSelector\":null,\"triggeredBy\":[{\"message\":\"Image change\",\"imageChangeBuild\":{\"imageID\":\"php@sha256:c31e4d3dcf4196e933116077c60fd0bcb545c337cc5d4633b91e46a4342a6ad7\",\"fromRef\":{\"kind\":\"ImageStreamTag\",\"name\":\"php:7.1-apache\"}}}]},\"status\":{\"phase\":\"New\",\"outputDockerImageReference\":\"172.30.38.182:5000/typo3-test/typo3:latest\",\"config\":{\"kind\":\"BuildConfig\",\"namespace\":\"typo3-test\",\"name\":\"typo3\"}}}\n"
+                            },
+                            {
+                                "name": "SOURCE_REPOSITORY",
+                                "value": "https://github.com/nikelmark/typo3.git"
+                            },
+                            {
+                                "name": "SOURCE_URI",
+                                "value": "https://github.com/nikelmark/typo3.git"
+                            },
+                            {
+                                "name": "ORIGIN_VERSION",
+                                "value": "v3.4.1.7"
+                            },
+                            {
+                                "name": "PUSH_DOCKERCFG_PATH",
+                                "value": "/var/run/secrets/openshift.io/push"
+                            }
+                        ],
+                        "resources": {},
+                        "volumeMounts": [
+                            {
+                                "name": "docker-socket",
+                                "mountPath": "/var/run/docker.sock"
+                            },
+                            {
+                                "name": "builder-dockercfg-5l8u9-push",
+                                "readOnly": true,
+                                "mountPath": "/var/run/secrets/openshift.io/push"
+                            },
+                            {
+                                "name": "builder-token-e1iio",
+                                "readOnly": true,
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount"
+                            }
+                        ],
+                        "terminationMessagePath": "/dev/termination-log",
+                        "imagePullPolicy": "IfNotPresent",
+                        "securityContext": {
+                            "privileged": true
+                        }
+                    }
+                ],
+                "restartPolicy": "Never",
+                "terminationGracePeriodSeconds": 30,
+                "dnsPolicy": "ClusterFirst",
+                "nodeSelector": {
+                    "region": "primary"
+                },
+                "serviceAccountName": "builder",
+                "serviceAccount": "builder",
+                "nodeName": "itsrv1529.esrv.local",
+                "securityContext": {},
+                "imagePullSecrets": [
+                    {
+                        "name": "builder-dockercfg-5l8u9"
+                    }
+                ]
+            },
+            "status": {
+                "phase": "Pending"
+            }
+        },
+        {
+            "kind": "Pod",
+            "apiVersion": "v1",
+            "metadata": {
+                "generateName": "typo3-2-",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "typo3",
+                    "deployment": "typo3-2",
+                    "deploymentconfig": "typo3"
+                },
+                "annotations": {
+                    "kubernetes.io/created-by": "{\"kind\":\"SerializedReference\",\"apiVersion\":\"v1\",\"reference\":{\"kind\":\"ReplicationController\",\"namespace\":\"typo3-test\",\"name\":\"typo3-2\",\"uid\":\"da0355cd-5684-11e7-860f-0050568c5781\",\"apiVersion\":\"v1\",\"resourceVersion\":\"120771074\"}}\n",
+                    "openshift.io/container.typo3.image.entrypoint": "[\"docker-php-entrypoint\",\"apache2-foreground\"]",
+                    "openshift.io/deployment-config.latest-version": "2",
+                    "openshift.io/deployment-config.name": "typo3",
+                    "openshift.io/deployment.name": "typo3-2",
+                    "openshift.io/generated-by": "OpenShiftNewApp",
+                    "openshift.io/scc": "anyuid"
+                }
+            },
+            "spec": {
+                "volumes": [
+                    {
+                        "name": "typo3-token-2o58y",
+                        "secret": {
+                            "secretName": "typo3-token-2o58y",
+                            "defaultMode": 420
+                        }
+                    }
+                ],
+                "containers": [
+                    {
+                        "name": "typo3",
+                        "image": "172.30.38.182:5000/typo3-test/typo3@sha256:2f8c8d8fcb609750f9a49b3d75009193b1eddb85e9a58984fb0bb2d03acdab7a",
+                        "ports": [
+                            {
+                                "containerPort": 8080,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "resources": {},
+                        "volumeMounts": [
+                            {
+                                "name": "typo3-token-2o58y",
+                                "readOnly": true,
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount"
+                            }
+                        ],
+                        "terminationMessagePath": "/dev/termination-log",
+                        "imagePullPolicy": "Always",
+                        "securityContext": {
+                            "capabilities": {
+                                "drop": [
+                                    "MKNOD",
+                                    "SYS_CHROOT"
+                                ]
+                            },
+                            "privileged": false,
+                            "seLinuxOptions": {
+                                "level": "s0:c26,c0"
+                            }
+                        }
+                    }
+                ],
+                "restartPolicy": "Always",
+                "terminationGracePeriodSeconds": 30,
+                "dnsPolicy": "ClusterFirst",
+                "nodeSelector": {
+                    "region": "primary"
+                },
+                "serviceAccountName": "typo3",
+                "serviceAccount": "typo3",
+                "nodeName": "itsrv1529.esrv.local",
+                "securityContext": {
+                    "seLinuxOptions": {
+                        "level": "s0:c26,c0"
+                    }
+                },
+                "imagePullSecrets": [
+                    {
+                        "name": "typo3-dockercfg-dz64m"
+                    }
+                ]
+            },
+            "status": {
+                "phase": "Pending"
+            }
+        }
+    ]
+}
