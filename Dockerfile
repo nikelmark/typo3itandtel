@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/rhscl/php-56-rhel7:latest
+FROM registry.access.redhat.com/rhscl/php-70-rhel7
 # Edit Version - original: TP3_VERS=8.7.1
 # To be able to change the Image
 USER 0
