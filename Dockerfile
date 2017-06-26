@@ -44,5 +44,7 @@ USER 1001
 
 COPY containerfiles/ /
 
+
+USER root
 #CMD ["/bin/sh","-c","while true; do echo hello world; sleep 60; done"]
 ENTRYPOINT ["/docker-entrypoint.sh"]
