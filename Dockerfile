@@ -49,4 +49,4 @@ USER 1001
 
 COPY containerfiles/ /
 
-CMD $STI_SCRIPTS_PATH/usage
+CMD ["/docker-entrypoint.sh"]
