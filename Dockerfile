@@ -43,12 +43,16 @@ RUN set -x && \
     chmod 777 ${APACHE_APP_ROOT}/FIRST_INSTALL && \
     ln -s typo3_src/typo3 typo3 && \
     ln -s typo3_src/index.php index.php
+    
 
 EXPOSE 8080
 
 USER 1001
 
 COPY containerfiles/ /
+
+RUN yum install dos2unix -y && \
+    dos2unix
 
 USER root
 
