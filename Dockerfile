@@ -51,10 +51,10 @@ USER 1001
 
 COPY containerfiles/ /
 
+USER root
+
 RUN yum install dos2unix -y && \
     dos2unix
-
-USER root
 
 RUN chmod +x /docker-entrypoint.sh
 
